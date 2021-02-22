@@ -3,7 +3,6 @@
 #include <vector>
 #include <optional>
 #include <string>
-//#include <cstdlib>
 #include <cmath>
 #include <iomanip>
 
@@ -28,23 +27,23 @@ public:
         Type type;
     };
 
-    std::optional <TokenList> tokenise (std::string input) const
+    std::optional <TokenList> tokenise(std::string input) const
     {
         // Removing leading and trailing whitespace from input
         input = trim(input);
         
         // First, we find the type of operation in input
-        auto type = findType (input);
+        auto type = findType(input);
         if (type == Type::unknown)
             return {};
         
         // Second, we determine lhs and rhs of operation
-        auto lhs = findLHS (input, type);
-        if (! lhs.has_value ())
+        auto lhs = findLHS(input, type);
+        if (! lhs.has_value())
             return {};
         
-        auto rhs = findRHS (input, type);
-        if (! rhs.has_value ())
+        auto rhs = findRHS(input, type);
+        if (! rhs.has_value())
             return {};
     
         // Assinging the variabls to the a TokenList object
@@ -64,16 +63,16 @@ private:
         size_t first = str.find_first_not_of(" \n\t\v\f\r");
         if (first == std::string::npos)
             return "";
-        size_t last = str.find_last_not_of(" \n\t\v\f\r");
+        size_t last = str.find_last_not_of (" \n\t\v\f\r");
         return str.substr(first, (last - first + 1));
     }
     
-    bool find (std::string input, std::string character) const
+    bool find(std::string input, std::string character) const
     {
-        return input.find (character) != std::string::npos;
+        return input.find(character) != std::string::npos;
     }
     
-    std::optional <double> findAndExtractLHS (std::string input, std::string character) const
+    std::optional <double> findAndExtractLHS(std::string input, std::string character) const
     {
         auto pos = input.find(character);
         
@@ -100,7 +99,7 @@ private:
             // Checking for a valid input to std::stod
             try {
                 size_t idx;
-                std::stod (lhs, &idx);
+                std::stod(lhs, &idx);
                 
                 // pos returns index of the last character used for conversion.
                 // here we check for inputs like '2refd' which would normally be valid.
@@ -118,13 +117,13 @@ private:
             }
             
             // Returning the std::stod evaluation of the lhs argument
-            return std::stod (lhs);
+            return std::stod(lhs);
         }
         
         return {};
     }
     
-    std::optional <double> findAndExtractRHS (std::string input, std::string character) const
+    std::optional <double> findAndExtractRHS(std::string input, std::string character) const
     {
         auto pos = input.find(character);
         
@@ -151,7 +150,7 @@ private:
             // Checking for a valid input to std::stod
             try {
                 size_t idx;
-                std::stod (rhs, &idx);
+                std::stod(rhs, &idx);
                 
                 // pos returns index of the last character used for conversion.
                 // here we check for inputs like '2refd' which would normally be valid.
@@ -169,55 +168,55 @@ private:
             }
             
             // Returning the std::stod evaluation of the rhs argument
-            return std::stod (rhs);
+            return std::stod(rhs);
         }
         
         return {};
     }
 
-    Type findType (std::string input) const
+    Type findType(std::string input) const
     {
         // Here, we check if the first number is -ve. This adds support for operations like -2*-20
-        if (find (input.substr(0,1), "-"))
+        if (find(input.substr(0,1), "-"))
         {
             // If it is, with this order of operations checks for - last
-            if (find (input.substr(1), "+")) return Type::add;
-            if (find (input.substr(1), "*")) return Type::multiply;
-            if (find (input.substr(1), "/")) return Type::divide;
-            if (find (input.substr(1), "-")) return Type::subtract;
+            if (find(input.substr(1), "+")) return Type::add;
+            if (find(input.substr(1), "*")) return Type::multiply;
+            if (find(input.substr(1), "/")) return Type::divide;
+            if (find(input.substr(1), "-")) return Type::subtract;
         }
         
         // Possible types of operations
-        if (find (input, "+")) return Type::add;
-        if (find (input, "*")) return Type::multiply;
-        if (find (input, "/")) return Type::divide;
-        if (find (input, "-")) return Type::subtract;
+        if (find(input, "+")) return Type::add;
+        if (find(input, "*")) return Type::multiply;
+        if (find(input, "/")) return Type::divide;
+        if (find(input, "-")) return Type::subtract;
         
         return Type::unknown;
     }
     
-    std::optional <double> findLHS (std::string input, Type type) const
+    std::optional <double> findLHS(std::string input, Type type) const
     {
         switch (type)
         {
             case Type::add:
             {
-                auto result = findAndExtractLHS (input, "+");
+                auto result = findAndExtractLHS(input, "+");
                 return result;
             }
             case Type::subtract:
             {
-                auto result = findAndExtractLHS (input, "-");
+                auto result = findAndExtractLHS(input, "-");
                 return result;
             }
             case Type::multiply:
             {
-                auto result = findAndExtractLHS (input, "*");
+                auto result = findAndExtractLHS(input, "*");
                 return result;
             }
             case Type::divide:
             {
-                auto result = findAndExtractLHS (input, "/");
+                auto result = findAndExtractLHS(input, "/");
                 return result;
             }
             default:
@@ -226,28 +225,28 @@ private:
         return {};
     }
     
-    std::optional <double> findRHS (std::string input, Type type) const
+    std::optional <double> findRHS(std::string input, Type type) const
     {
         switch (type)
         {
             case Type::add:
             {
-                auto result = findAndExtractRHS (input, "+");
+                auto result = findAndExtractRHS(input, "+");
                 return result;
             }
             case Type::subtract:
             {
-                auto result = findAndExtractRHS (input, "-");
+                auto result = findAndExtractRHS(input, "-");
                 return result;
             }
             case Type::multiply:
             {
-                auto result = findAndExtractRHS (input, "*");
+                auto result = findAndExtractRHS(input, "*");
                 return result;
             }
             case Type::divide:
             {
-                auto result = findAndExtractRHS (input, "/");
+                auto result = findAndExtractRHS(input, "/");
                 return result;
             }
             default:
@@ -264,7 +263,7 @@ public:
     Calculator () = default;
     ~Calculator () = default;
     
-    double calculate (Tokeniser::TokenList tokens) const
+    double calculate(Tokeniser::TokenList tokens) const
     {
         // Depending on type of operation foudn in tokens object, return the appropriate result
         switch (tokens.type)
@@ -297,7 +296,7 @@ public:
     };
     
 
-    InputRequest requestInput () const
+    InputRequest requestInput() const
     {
         std::cout << "Please enter a calculation (Type Q to quit)" << std::endl;
         
@@ -314,13 +313,13 @@ public:
 
 private:
 
-    void processInput (std::string input) const
+    void processInput(std::string input) const
     {
         std::cout << std::setprecision(7);
         // input is tokenised
-        if (auto tokens = Tokeniser ().tokenise (input))
+        if (auto tokens = Tokeniser().tokenise(input))
             // calculations are run on the tokens received from tokenise
-            std::cout << "Answer: " << Calculator ().calculate (*tokens) << std::endl;
+            std::cout << "Answer: " << Calculator().calculate(*tokens) << std::endl;
         else
             std::cout << "There was an error in the input string, please try again..." << std::endl;
     }
@@ -330,53 +329,53 @@ class ResultChecker
 {
 public:
 
-    static void check (double value, double expected, double range = 1e-3)
+    static void check(double value, double expected, double range = 1e-3)
     {
         // checking whether result of operation and expected answer are within range
         std::cout << "Value : " << value << "; Expected: " << expected << "; Abs: " << std::abs(value-expected) << std::endl;
-        return assert (std::abs (value - expected) <= range);
+        return assert (std::abs(value - expected) <= range);
     }
 };
 
-void test ()
+void test()
 {
-    auto result = Tokeniser ().tokenise ("6*9");
-    assert (result.has_value ());
-    ResultChecker::check (result->lhs, 6);
-    ResultChecker::check (result->rhs, 9);
+    auto result = Tokeniser().tokenise("6*9");
+    assert (result.has_value());
+    ResultChecker::check(result->lhs, 6);
+    ResultChecker::check(result->rhs, 9);
     assert (result->type == Tokeniser::Type::multiply);
     
-    result = Tokeniser ().tokenise ("6 * 9");
-    assert (result.has_value ());
-    ResultChecker::check (result->lhs, 6);
-    ResultChecker::check (result->rhs, 9);
+    result = Tokeniser().tokenise("6 * 9");
+    assert (result.has_value());
+    ResultChecker::check(result->lhs, 6);
+    ResultChecker::check(result->rhs, 9);
     assert (result->type == Tokeniser::Type::multiply);
     
-    result = Tokeniser ().tokenise ("25 * 4");
+    result = Tokeniser().tokenise("25 * 4");
     assert (result.has_value ());
-    ResultChecker::check (result->lhs, 25);
-    ResultChecker::check (result->rhs, 4);
+    ResultChecker::check(result->lhs, 25);
+    ResultChecker::check(result->rhs, 4);
     assert (result->type == Tokeniser::Type::multiply);
 
-    ResultChecker::check (Calculator ().calculate ({ 10, 4, Tokeniser::Type::multiply }), 40);
-    ResultChecker::check (Calculator ().calculate ({ 25.3, 18.6, Tokeniser::Type::add }), 43.9);
-    ResultChecker::check (Calculator ().calculate ({ 3, 5.6, Tokeniser::Type::subtract }), -2.6); // expected result of: 3 - 5.6 = -2.6
+    ResultChecker::check(Calculator().calculate({ 10, 4, Tokeniser::Type::multiply }), 40);
+    ResultChecker::check(Calculator().calculate({ 25.3, 18.6, Tokeniser::Type::add }), 43.9);
+    ResultChecker::check(Calculator().calculate({ 3, 5.6, Tokeniser::Type::subtract }), -2.6); // expected result of: 3 - 5.6 = -2.6
 }
 
-void run ()
+void run()
 {
     // Create processoer
     InputProcessor processor;
     // Continue running while requestInput returns continueProcessing
-    while (processor.requestInput () == InputProcessor::InputRequest::continueProcessing);
+    while (processor.requestInput() == InputProcessor::InputRequest::continueProcessing);
 }
 
-int main (int argc, const char * argv[])
+int main(int argc, const char * argv[])
 {
     if (argc > 1 && std::string (argv[1]) == "--test")
-        test ();
+        test();
     else
-        run ();
+        run();
     
     return 0;
 }

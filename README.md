@@ -43,7 +43,6 @@ As asked in the task, the following examples are computed correctly:
 3-5.6
 pi * 5 (to five decimal places)
 ```
-The commit history details the changes made to the original `main.cpp` file.
 
 ## Web API Parsing
 
